@@ -1,0 +1,16 @@
+<div class="layout-topbar">
+    <div class="topbar-left">
+        <a tabindex="0" class="menu-button" (click)="appMain.onMenuButtonClick($event)">
+            <i class="pi pi-chevron-left"></i>
+        </a>
+        <span class="topbar-separator"></span>
+        <ng-template ngFor let-item let-last="last" [ngForOf]="items">
+            <span class="viewname" style="text-transform: uppercase">{{item.label}}</span>
+        </ng-template>
+        <img id="logo-mobile" class="mobile-logo" [src]="'assets/layout/images/logo-'+ (app.colorScheme === 'light' ? 'dark' : 'white') + '.svg'" alt="diamond-layout" />
+    </div>
+
+    <div class="topbar-right">
+        
+    </div>
+</div>

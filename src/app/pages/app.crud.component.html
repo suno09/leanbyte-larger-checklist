@@ -1,0 +1,115 @@
+<div class="p-grid">
+  <div class="p-col-12">
+
+    <p-toast></p-toast>
+
+    <div class="card">
+      <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+          <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2 p-mb-2"
+            (click)="openNew()"></button>
+          <button pButton pRipple label="New Group" icon="pi pi-plus" class="p-button-info p-mr-2 p-mb-2"
+            (click)="openNewGroup()"></button>
+          <button pButton pRipple label="Edit Group" icon="pi pi-plus" class="p-button-warning p-mr-2 p-mb-2"
+            (click)="EditSelectedChecklistGroup()"
+            [disabled]="!selectedChecklists || selectedChecklists.length != 1 || !selectedChecklists[0].checklists"></button>
+          <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger p-mb-2"
+            (click)="deleteSelectedChecklists()"
+            [disabled]="!selectedChecklists || !selectedChecklists.length"></button>
+        </ng-template>
+      </p-toolbar>
+
+      <p-table #dt [value]="checklists" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['title']"
+        [(selection)]="selectedChecklists" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+          <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
+            <h5 class="p-m-0">Manage Checklists</h5>
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                placeholder="Search..." />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 3rem">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon>
+            </th>
+             <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-checklist>
+          <tr>
+            <td>
+              <p-tableCheckbox [value]="checklist"></p-tableCheckbox>
+            </td>
+            <td><span class="p-column-title">Title</span>
+              {{checklist.title}}
+            </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+          <div class="p-d-flex p-ai-center p-jc-between">
+            In total there are {{checklists ? checklists.length : 0 }} checklists.
+          </div>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <p-dialog [(visible)]="checklistDialog" [style]="{width: '450px'}" header="Checklist Details" [modal]="true"
+      styleClass="p-fluid">
+      <ng-template pTemplate="content">
+        <div class="p-field">
+          <label for="title">Title</label>
+          <input type="text" pInputText id="title" [(ngModel)]="checklist.title" required autofocus />
+          <small class="p-invalid" *ngIf="submitted && !checklist.title">Title is required.</small>
+        </div>
+        </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+          (click)="saveChecklist()"></button>
+      </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="checklistGroupDialog" [style]="{width: '1000px'}" header="Checklist Group" [modal]="true"
+      styleClass="p-fluid">
+      <ng-template pTemplate="content">
+        <div class="p-field">
+          <label for="titleg">Title</label>
+          <input type="text" pInputText id="titleg" [(ngModel)]="checklist.title" required autofocus />
+          <small class="p-invalid" *ngIf="submitted && !checklist.title">Title is required.</small>
+        </div>
+
+        <div class="p-field">
+          <div class="card">
+            <label for="checklist_group">Checklist</label>
+            <p-pickList [source]="sourceChecklists" [target]="targetChecklists" sourceHeader="From" targetHeader="To"
+              dragdrop="true" [responsive]="true" [sourceStyle]="{'height':'300px'}" [targetStyle]="{'height':'300px'}"
+              filterBy="title" (onMoveToTarget)="addChecklistToCheckList($event)"
+              (onMoveAllToTarget)="addChecklistToCheckList($event)" (onMoveToSource)="DelChecklistToCheckList($event)"
+              (onMoveAllToSource)="DelChecklistToCheckList($event)">
+              <ng-template let-cl pTemplate="item">
+                <div>{{cl.title}}</div>
+              </ng-template>
+            </p-pickList>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"
+          (click)="hideDialogGroup()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+          (click)="saveChecklistGroup()"></button>
+      </ng-template>
+    </p-dialog>
+
+    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+  </div>
+</div>
