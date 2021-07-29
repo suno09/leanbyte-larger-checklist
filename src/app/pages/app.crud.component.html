@@ -19,7 +19,7 @@
         </ng-template>
       </p-toolbar>
 
-      <p-table #dt [value]="checklists" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['title']"
+      <p-table #dt [value]="checklists" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['title', 'checklists']"
         [(selection)]="selectedChecklists" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
@@ -39,7 +39,9 @@
             </th>
             <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon>
             </th>
-             <th></th>
+            <th pSortableColumn="checklists.length">Group <p-sortIcon field="checklists.length"></p-sortIcon>
+            </th>
+            <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-checklist>
@@ -50,7 +52,10 @@
             <td><span class="p-column-title">Title</span>
               {{checklist.title}}
             </td>
-            </tr>
+            <td><span class="p-column-title">Group</span>
+              <span *ngIf="checklist.checklists" class="overview-icon"><i class="pi pi-check-circle product-badge status-instock" style="font-size: 1.5rem"></i></span>
+            </td>
+          </tr>
         </ng-template>
         <ng-template pTemplate="summary">
           <div class="p-d-flex p-ai-center p-jc-between">
@@ -68,7 +73,7 @@
           <input type="text" pInputText id="title" [(ngModel)]="checklist.title" required autofocus />
           <small class="p-invalid" *ngIf="submitted && !checklist.title">Title is required.</small>
         </div>
-        </ng-template>
+      </ng-template>
 
       <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
