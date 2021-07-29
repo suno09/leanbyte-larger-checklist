@@ -19,8 +19,9 @@
         </ng-template>
       </p-toolbar>
 
-      <p-table #dt [value]="checklists" [columns]="cols" [rows]="10" [paginator]="true" [globalFilterFields]="['title', 'checklists']"
-        [(selection)]="selectedChecklists" [rowHover]="true" dataKey="id" styleClass="p-datatable-customers"
+      <p-table #dt [value]="checklists" [columns]="cols" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['title', 'checklists']" [(selection)]="selectedChecklists" [rowHover]="true" dataKey="id"
+        styleClass="p-datatable-customers"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
           <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between table-header">
@@ -53,15 +54,19 @@
               {{checklist.title}}
             </td>
             <td><span class="p-column-title">Group</span>
-              <span *ngIf="checklist.checklists" class="overview-icon"><i class="pi pi-check-circle product-badge status-instock" style="font-size: 1.5rem"></i></span>
+              <span *ngIf="checklist.checklists" class="overview-icon">
+                <!-- <i class="pi pi-check-circle product-badge status-instock" style="font-size: 1.5rem"></i> -->
+                <button type="button" pButton label=" " (click)="showDetail(checklist.id);op2.toggle($event)"
+                  class="p-button-success"><i class="pi pi-check-circle" style="font-size: 1.5rem"></i></button>
+              </span>
             </td>
           </tr>
         </ng-template>
-        <ng-template pTemplate="summary">
-          <div class="p-d-flex p-ai-center p-jc-between">
-            In total there are {{checklists ? checklists.length : 0 }} checklists.
-          </div>
-        </ng-template>
+      <ng-template pTemplate="summary">
+        <div class="p-d-flex p-ai-center p-jc-between">
+          In total there are {{checklists ? checklists.length : 0 }} checklists.
+        </div>
+      </ng-template>
       </p-table>
     </div>
 
@@ -117,4 +122,22 @@
 
     <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
   </div>
+
+  <p-overlayPanel #op2 [showCloseIcon]="true" [style]="{width: '450px'}">
+    <ng-template pTemplate>
+      <p-table [value]="checklistGroupInfo" selectionMode="none" [paginator]="true" [rows]="5" (onRowSelect)="op2.hide()">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="title">Title<p-sortIcon field="title"></p-sortIcon>
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-checklist>
+          <tr [pSelectableRow]="rowData">
+            <td>{{checklist.title}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-template>
+  </p-overlayPanel>
 </div>

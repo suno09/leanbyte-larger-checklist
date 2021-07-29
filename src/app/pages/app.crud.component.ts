@@ -55,6 +55,8 @@ export class AppCrudComponent implements OnInit {
   checklist: CheckList;
 
   checklistDetail: CheckListDetail;
+  
+  checklistGroupInfo: CheckListLevel[];
 
   selectedChecklists: CheckList[];
 
@@ -360,5 +362,16 @@ export class AppCrudComponent implements OnInit {
     }
 
     return index;
+  }
+
+  showDetail(id, event) {
+    this.checklistService.getCheckListDetail(id).subscribe({
+      next: (data) => {
+        this.checklistGroupInfo = data.checklists;
+      },
+      error: (error) => {
+        console.error("There was an error!", error.message);
+      },
+    });
   }
 }
